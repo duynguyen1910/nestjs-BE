@@ -36,7 +36,7 @@ import { ProductImage } from './models/product-image.model';
         password: configService.get<string>('PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
         entities: [Product, Category, User, ProductCategory, ProductImage],
-        synchronize: true,
+        synchronize: false,
       }),
       inject: [ConfigService],
     }),
