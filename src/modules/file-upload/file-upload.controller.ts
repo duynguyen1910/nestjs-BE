@@ -30,7 +30,7 @@ export class FileUploadController {
         }),
     }))
     async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
-        const baseUrl = 'http://localhost:3000';
+        const baseUrl = process.env.BASE_URL;
 
         const fileUrls = await this.fileUploadService.saveFilesInfo(files, baseUrl);
         return fileUrls;

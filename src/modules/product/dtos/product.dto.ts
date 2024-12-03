@@ -5,10 +5,6 @@ export class ProductDto {
   @MinLength(3) // Đảm bảo tên sản phẩm có ít nhất 3 ký tự
   productName: string;
 
-  @IsNotEmpty() // Đảm bảo categoryId không được rỗng
-  @IsUUID() // Đảm bảo categoryId là một UUID hợp lệ
-  categoryId: string;
-
   @IsNotEmpty()
   @IsNumber() // Đảm bảo giá là một số
   price: number;

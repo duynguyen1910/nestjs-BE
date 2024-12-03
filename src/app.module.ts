@@ -13,6 +13,9 @@ import { AuthModule } from './modules/auth/auth.module';
 import { User } from './models/user.model';
 import { FileUploadModule } from './modules/file-upload/file-upload.module';
 import { join } from 'path';
+import { ProductCategory } from './modules/product-category/product-category.entity';
+import { ProductCategoryModule } from './modules/product-category/product-category.module';
+import { ProductImage } from './models/product-image.model';
 
 
 @Module({
@@ -27,13 +30,13 @@ import { join } from 'path';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
         type: 'mysql',
-        host: configService.get<string>('DB_HOST'),
-        port: +configService.get<number>('DB_PORT'),
+        host: configService.get<string>('BASE_URL'),
+        port: +configService.get<number>('DATABASE_PORT'),
         username: configService.get<string>('USERNAME'),
         password: configService.get<string>('PASSWORD'),
         database: configService.get<string>('DATABASE_NAME'),
-        entities: [Product, Category, User],
-        synchronize: false,
+        entities: [Product, Category, User, ProductCategory, ProductImage],
+        synchronize: true,
       }),
       inject: [ConfigService],
     }),
@@ -41,7 +44,8 @@ import { join } from 'path';
     CategoryModule,
     UserModule,
     AuthModule,
-    FileUploadModule
+    FileUploadModule,
+    ProductCategoryModule
   ],
   controllers: [AppController],
   providers: [AppService],
