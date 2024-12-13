@@ -1,40 +1,51 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, Query, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Put,
+  Delete,
+  Query,
+  BadRequestException,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
-import { ProductDto } from 'src/modules/product/dtos/product.dto';
-import { Product } from 'src/models/product.model';
-import { CreateProductDto } from './dtos/create-product.dto';
-import { ProductResponseDto } from './dtos/product-response.dto';
+import { CreateProductDto, ProductResponseDto } from './dto';
 
 @Controller('product')
 export class ProductController {
-    constructor(private readonly productService: ProductService) { }
+  constructor(private readonly productService: ProductService) {}
 
-    @Get()
-    async getAllProducts(@Query('categoryId') categoryId?: string): Promise<Product[]> {
-        if (categoryId) {
-            return this.productService.getProductByCategoryId(categoryId);
-        }
-
-        return this.productService.getAllProduct();
+  @Get()
+  async getAllProducts(
+    @Query('categoryId') categoryId?: string,
+  ): Promise<ProductResponseDto[]> {
+    if (categoryId) {
+      return this.productService.getProductByCategoryId(categoryId);
     }
 
-    @Get(':id')
-    async getProductById(@Param('id') id: string): Promise<ProductResponseDto> {
-        return this.productService.getProductById(id);
-    }
+    return this.productService.getAllProduct();
+  }
 
-    @Post()
-    async addProduct(@Body() createProductDto: CreateProductDto): Promise<ProductResponseDto> {
-        return this.productService.addProduct(createProductDto);
-    }
+  @Get(':id')
+  async getProductById(@Param('id') id: string): Promise<ProductResponseDto> {
+    return this.productService.getProductById(id);
+  }
 
-    @Put(':id')
-    async updateProduct(@Param('id') id: string, @Body() productDto: ProductDto): Promise<Product> {
-        return this.productService.updateProduct(id, productDto);
-    }
+  @Post()
+  async createProduct(
+    @Body() createProductDto: CreateProductDto,
+  ): Promise<ProductResponseDto> {
+    return this.productService.createProduct(createProductDto);
+  }
 
-    @Delete(':id')
-    async deleteProduct(@Param('id') id: string): Promise<void> {
-        return this.productService.deleteProduct(id);
-    }
+  // @Put(':id')
+  // async updateProduct(@Param('id') id: string, @Body() productDto: ProductDto): Promise<Product> {
+  //     return this.productService.updateProduct(id, productDto);
+  // }
+
+  @Delete(':id')
+  async deleteProduct(@Param('id') id: string): Promise<void> {
+    // return this.productService.deleteProduct(id);
+  }
 }

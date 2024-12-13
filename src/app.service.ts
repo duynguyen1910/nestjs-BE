@@ -5,7 +5,7 @@ export class AppService {
   getConnnected(): { statusCode: number; message: string } {
     return {
       statusCode: 200,
-      message: 'Connection successful!'
+      message: 'Connection successful!',
     };
   }
 }

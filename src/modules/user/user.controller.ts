@@ -1,24 +1,42 @@
-import { Controller, Get, Injectable, Req, UseGuards } from "@nestjs/common";
-import { User } from "src/models/user.model";
-import { UserService } from "./user.service";
-import { AuthGuard } from "../auth/jwt-auth.guard";
-
+import {
+  Body,
+  Controller,
+  Get,
+  Injectable,
+  Param,
+  Put,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
+import { UserService } from './user.service';
+import { AuthGuard, RoleGuard } from '../../guards';
+import { Roles } from 'src/decorators';
+import { Role } from 'src/enums';
+import { UserResponseDto, UpdateUserDto } from './dto';
 
 @Controller('user')
 export class UserController {
-    constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
-    @Get()
-    @UseGuards(AuthGuard)
-    getAllUser(): Promise<User[]> {
-        return this.userService.getAllUser();
-    }
+  @Get()
+  @UseGuards(AuthGuard, RoleGuard)
+  @Roles(Role.CUSTOMER)
+  getAllUser(): Promise<UserResponseDto[]> {
+    return this.userService.getAllUser();
+  }
 
+  @Get('info')
+  @UseGuards(AuthGuard)
+  getUserInfo(@Req() req): Promise<UserResponseDto> {
+    const userId = req.user.sub;
+    return this.userService.getUserInfo(userId);
+  }
 
-    @Get('info')
-    @UseGuards(AuthGuard)
-    getUserInfo(@Req() req): Promise<User> {
-        const userId = req.user.sub;
-        return this.userService.getUserInfo(userId);
-    }
+  @Put(':id')
+  async updateUser(
+    @Param('id') userId: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto> {
+    return this.userService.updateUser(userId, updateUserDto);
+  }
 }
